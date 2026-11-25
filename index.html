@@ -11,12 +11,13 @@
       theme: {
         extend: {
           colors: {
-            obsidian: '#0b0e14',
-            card: '#131823',
-            cardHover: '#1a2232',
-            borderDark: '#232c3d',
-            accent: '#0ea5e9',
-            accentDark: '#0284c7'
+            obsidian: '#090d16',
+            panel: '#111726',
+            panelAlt: '#172033',
+            line: '#222f47',
+            ice: '#38bdf8',
+            iceDeep: '#0284c7',
+            frost: '#2dd4bf'
           }
         }
       }
@@ -24,20 +25,24 @@
   </script>
   <style>
     body {
-      background-color: #0b0e14;
-      color: #f1f5f9;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #090d16;
+      color: #e2e8f0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
-    .tab-active {
-      background-color: #0ea5e9;
-      color: #0b0e14;
-      font-weight: 700;
+    .mono-num {
+      font-variant-numeric: tabular-nums;
     }
-    .tab-inactive {
-      background-color: #131823;
+    .tab-btn-active {
+      background: linear-gradient(180deg, #0ea5e9 0%, #0284c7 100%);
+      color: #06101a;
+      font-weight: 700;
+      border: 1px solid #38bdf8;
+    }
+    .tab-btn-idle {
+      background-color: #111726;
       color: #94a3b8;
-      border: 1px solid #232c3d;
+      border: 1px solid #222f47;
     }
     @media print {
       body {
@@ -47,11 +52,10 @@
       .no-print {
         display: none !important;
       }
-      .print-only-card {
+      .print-box {
         background: #ffffff !important;
         color: #0f172a !important;
         border: 1px solid #cbd5e1 !important;
-        box-shadow: none !important;
       }
       textarea, input, select {
         border: 1px solid #cbd5e1 !important;
@@ -63,48 +67,58 @@
 </head>
 <body class="min-h-screen pb-24">
 
-  <!-- HEADER -->
-  <header class="sticky top-0 z-30 bg-[#0b0e14]/95 backdrop-blur border-b border-borderDark px-4 py-3 no-print">
-    <div class="max-w-3xl mx-auto flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400 font-black text-base">
-          EDX
+  <!-- TOPBAR TÉCNICA -->
+  <header class="sticky top-0 z-30 bg-[#090d16]/95 backdrop-blur border-b border-line px-4 py-3 no-print">
+    <div class="max-w-3xl mx-auto flex items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-ice/10 border border-ice/40 flex items-center justify-center text-ice">
+          <!-- Ícono termómetro/copo técnico -->
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07" stroke-linecap="round"/>
+          </svg>
         </div>
         <div>
-          <h1 class="text-base font-bold tracking-tight text-white leading-tight">FríoAsist AI EDX</h1>
-          <p class="text-[11px] text-slate-400">Asistente de Refrigeración Comercial</p>
+          <div class="flex items-center gap-2">
+            <h1 class="text-sm sm:text-base font-bold tracking-wide text-white">FríoAsist AI EDX</h1>
+            <span class="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-ice/10 text-ice border border-ice/30">HVAC/R</span>
+          </div>
+          <p class="text-[11px] text-slate-400">Control de carga, diagnóstico de fallas y reportes</p>
         </div>
       </div>
-      <button id="btnOpenScanner" type="button" class="px-3 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs flex items-center gap-1.5 shadow-lg shadow-sky-500/20 active:scale-95 transition">
-        <span>📷</span>
-        <span>Escanear / Perfiles</span>
+
+      <button id="btnOpenScanner" type="button" class="px-3 py-2 rounded-lg bg-panelAlt hover:bg-[#1e2942] text-ice border border-ice/40 font-semibold text-xs flex items-center gap-1.5 transition active:scale-95">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M4 7h3l2-2h6l2 2h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z"/>
+          <circle cx="12" cy="13" r="3"/>
+        </svg>
+        <span>Placa / Perfiles</span>
       </button>
     </div>
   </header>
 
-  <!-- NAVEGACIÓN DE PESTAÑAS -->
+  <!-- NAVEGACIÓN -->
   <nav class="max-w-3xl mx-auto px-4 pt-3 pb-2 no-print">
     <div class="grid grid-cols-5 gap-1.5 text-center text-[11px] sm:text-xs">
-      <button type="button" data-tab="carga" class="nav-tab tab-active py-2.5 px-1 rounded-xl transition">Carga / PSI</button>
-      <button type="button" data-tab="fallas" class="nav-tab tab-inactive py-2.5 px-1 rounded-xl transition">Fallas</button>
-      <button type="button" data-tab="codigos" class="nav-tab tab-inactive py-2.5 px-1 rounded-xl transition">Paneles</button>
-      <button type="button" data-tab="informe" class="nav-tab tab-inactive py-2.5 px-1 rounded-xl transition">Informe</button>
-      <button type="button" data-tab="historial" class="nav-tab tab-inactive py-2.5 px-1 rounded-xl transition">Historial</button>
+      <button type="button" data-tab="carga" class="nav-tab tab-btn-active py-2 px-1 rounded-lg transition">Carga / PSI</button>
+      <button type="button" data-tab="fallas" class="nav-tab tab-btn-idle py-2 px-1 rounded-lg transition">Fallas</button>
+      <button type="button" data-tab="codigos" class="nav-tab tab-btn-idle py-2 px-1 rounded-lg transition">Códigos</button>
+      <button type="button" data-tab="informe" class="nav-tab tab-btn-idle py-2 px-1 rounded-lg transition">Informe</button>
+      <button type="button" data-tab="historial" class="nav-tab tab-btn-idle py-2 px-1 rounded-lg transition">Historial</button>
     </div>
   </nav>
 
-  <main class="max-w-3xl mx-auto px-4 pt-2 space-y-4">
+  <main class="max-w-3xl mx-auto px-4 pt-2 space-y-3.5">
 
-    <!-- TARJETA IDENTIFICACIÓN RÁPIDA DEL EQUIPO / LOCAL -->
-    <section class="bg-card border border-borderDark rounded-2xl p-3.5 no-print">
+    <!-- IDENTIFICACIÓN DE UNIDAD -->
+    <section class="bg-panel border border-line rounded-xl p-3.5 no-print">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         <div>
-          <label class="block text-[11px] text-slate-400 mb-1">Local / Tienda / Sala</label>
-          <input id="inputLocal" type="text" placeholder="Ej. Local La Florida - Pasillo Lácteos" class="w-full bg-obsidian border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500" />
+          <label class="block text-[11px] font-medium text-slate-400 mb-1">Local / Sucursal / Sala</label>
+          <input id="inputLocal" type="text" placeholder="Ej. Sucursal Centro - Exhibición Frío" class="w-full bg-obsidian border border-line rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-ice" />
         </div>
         <div>
-          <label class="block text-[11px] text-slate-400 mb-1">Equipo / Marca / Modelo</label>
-          <input id="inputEquipo" type="text" value="Vitrina Ventus FER-1500" placeholder="Ej. Vitrina Ventus / Mural Hussmann" class="w-full bg-obsidian border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500" />
+          <label class="block text-[11px] font-medium text-slate-400 mb-1">Equipo / Marca / Modelo</label>
+          <input id="inputEquipo" type="text" value="Vitrina Ventus FER-1500" placeholder="Ej. Vitrina Ventus / Mural Hussmann" class="w-full bg-obsidian border border-line rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-ice" />
         </div>
       </div>
     </section>
@@ -112,253 +126,242 @@
     <!-- ========================================================= -->
     <!-- PESTAÑA 1: CARGA Y PRESIÓN SIN BÁSCULA                    -->
     <!-- ========================================================= -->
-    <section id="tab-carga" class="tab-panel space-y-4">
+    <section id="tab-carga" class="tab-panel space-y-3.5">
 
-      <!-- Estado del equipo: Andando vs Apagado -->
-      <div class="bg-card border border-borderDark rounded-2xl p-4 space-y-3">
+      <!-- Estado del compresor -->
+      <div class="bg-panel border border-line rounded-xl p-4 space-y-3">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-slate-300">1. Estado del compresor al medir</span>
-          <span id="badgeEstadoCompresor" class="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">En marcha</span>
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Condición del Compresor</span>
+          <span id="badgeEstadoCompresor" class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">MARCHA</span>
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <button type="button" id="btnModeRunning" class="py-2.5 px-3 rounded-xl font-bold text-xs bg-sky-500 text-slate-950 transition">
-            ⚡ Equipo Andando
+          <button type="button" id="btnModeRunning" class="py-2.5 px-3 rounded-lg font-semibold text-xs bg-ice text-slate-950 border border-ice transition">
+            Equipo Andando
           </button>
-          <button type="button" id="btnModeOff" class="py-2.5 px-3 rounded-xl font-semibold text-xs bg-obsidian text-slate-400 border border-borderDark transition">
-            🛑 Apagado / En Vacío
+          <button type="button" id="btnModeOff" class="py-2.5 px-3 rounded-lg font-medium text-xs bg-obsidian text-slate-400 border border-line transition">
+            Apagado / En Vacío
           </button>
         </div>
       </div>
 
-      <!-- Selección de Gas y Aplicación -->
-      <div class="bg-card border border-borderDark rounded-2xl p-4 space-y-3">
-        <span class="block text-xs font-semibold text-slate-300">2. Refrigerante y Régimen de Trabajo</span>
+      <!-- Refrigerante y régimen -->
+      <div class="bg-panel border border-line rounded-xl p-4 space-y-3">
+        <span class="block text-xs font-semibold uppercase tracking-wider text-slate-300">Refrigerante y Régimen</span>
         <div class="grid grid-cols-4 gap-2" id="gasSelector">
-          <button type="button" data-gas="R134a" class="gas-btn py-2 rounded-xl text-xs font-bold bg-sky-500 text-slate-950">R134a</button>
-          <button type="button" data-gas="R404A" class="gas-btn py-2 rounded-xl text-xs font-semibold bg-obsidian text-slate-300 border border-borderDark">R404A</button>
-          <button type="button" data-gas="R290" class="gas-btn py-2 rounded-xl text-xs font-semibold bg-obsidian text-slate-300 border border-borderDark">R290</button>
-          <button type="button" data-gas="R22" class="gas-btn py-2 rounded-xl text-xs font-semibold bg-obsidian text-slate-300 border border-borderDark">R22</button>
+          <button type="button" data-gas="R134a" class="gas-btn py-2 rounded-lg text-xs font-mono font-bold bg-ice text-slate-950 border border-ice">R134a</button>
+          <button type="button" data-gas="R404A" class="gas-btn py-2 rounded-lg text-xs font-mono font-medium bg-obsidian text-slate-300 border border-line">R404A</button>
+          <button type="button" data-gas="R290" class="gas-btn py-2 rounded-lg text-xs font-mono font-medium bg-obsidian text-slate-300 border border-line">R290</button>
+          <button type="button" data-gas="R22" class="gas-btn py-2 rounded-lg text-xs font-mono font-medium bg-obsidian text-slate-300 border border-line">R22</button>
         </div>
 
-        <div id="r290Alert" class="hidden p-3 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-200 text-xs leading-relaxed">
-          ⚠️ <strong>Precaución R290 (Propano inflamable):</strong> Lleva cargas muy bajas (60g–140g). Cargar solo por presión es riesgoso; hazlo por pulsos mínimos vigilando el retorno y el amperaje estricto sin llamas ni chispas cerca.
+        <div id="r290Alert" class="hidden p-3 rounded-lg bg-amber-500/10 border border-amber-500/40 text-amber-200 text-xs leading-relaxed">
+          <strong class="font-semibold">Aviso R290 (Hidrocarburo inflamable):</strong> Cargas nominales reducidas (habitualmente 60 g – 140 g). Dosificar en pulsos breves controlando retorno y consumo eléctrico sin fuentes de ignición.
         </div>
 
-        <div class="grid grid-cols-2 gap-2 pt-1">
-          <button type="button" id="btnAppMedia" class="py-2.5 px-3 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/50">
-            🧊 Conservación (0°C a +6°C)
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" id="btnAppMedia" class="py-2 px-3 rounded-lg text-xs font-semibold bg-ice/15 text-ice border border-ice/40">
+            Conservación (0 °C a +6 °C)
           </button>
-          <button type="button" id="btnAppBaja" class="py-2.5 px-3 rounded-xl text-xs font-semibold bg-obsidian text-slate-400 border border-borderDark">
-            ❄️ Congelados (-18°C a -22°C)
+          <button type="button" id="btnAppBaja" class="py-2 px-3 rounded-lg text-xs font-medium bg-obsidian text-slate-400 border border-line">
+            Congelados (-18 °C a -22 °C)
           </button>
         </div>
 
-        <!-- Condiciones ambientales y carga térmica -->
-        <div class="grid grid-cols-2 gap-2 pt-1">
+        <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">Temp. ambiente local</label>
-            <select id="selectAmbTemp" class="w-full bg-obsidian border border-borderDark rounded-xl px-2.5 py-2 text-xs text-white">
+            <label class="block text-[11px] text-slate-400 mb-1">Ambiente del local</label>
+            <select id="selectAmbTemp" class="w-full bg-obsidian border border-line rounded-lg px-2.5 py-2 text-xs text-white">
               <option value="cool">Fresco (&lt; 18 °C)</option>
               <option value="normal" selected>Normal (18 °C – 26 °C)</option>
               <option value="hot">Caluroso (&gt; 27 °C)</option>
             </select>
           </div>
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">Temp. interior vitrina</label>
-            <select id="selectCabTemp" class="w-full bg-obsidian border border-borderDark rounded-xl px-2.5 py-2 text-xs text-white">
-              <option value="cold" selected>Ya está fría / cerca de corte</option>
-              <option value="warm">Recién encendida / caliente</option>
+            <label class="block text-[11px] text-slate-400 mb-1">Estado térmico interno</label>
+            <select id="selectCabTemp" class="w-full bg-obsidian border border-line rounded-lg px-2.5 py-2 text-xs text-white">
+              <option value="cold" selected>Enfriando / cerca de corte</option>
+              <option value="warm">Gabinete tibio / recién iniciado</option>
             </select>
           </div>
         </div>
       </div>
 
-      <!-- Lecturas en Terreno (PSI + Amperaje + Retorno) -->
-      <div class="bg-card border border-borderDark rounded-2xl p-4 space-y-4">
+      <!-- Lecturas de manómetro y pinza -->
+      <div class="bg-panel border border-line rounded-xl p-4 space-y-4">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-semibold text-slate-300">3. Lecturas en Terreno</span>
-          <span id="cargaNominalLabel" class="text-[11px] text-slate-400">Placa: ~135g | RLA: 2.1A</span>
+          <span class="text-xs font-semibold uppercase tracking-wider text-slate-300">Lecturas en Terreno</span>
+          <span id="cargaNominalLabel" class="text-[11px] font-mono text-slate-400">Placa: ~135g | RLA: 2.1A</span>
         </div>
 
-        <!-- Control PSI -->
-        <div class="bg-obsidian border border-borderDark rounded-xl p-3">
+        <!-- PSI -->
+        <div class="bg-obsidian border border-line rounded-xl p-3">
           <div class="flex items-center justify-between mb-2">
-            <span class="text-xs text-slate-300 font-medium">Presión Baja (Manifold)</span>
-            <span class="text-xs font-bold text-sky-400">Objetivo: <span id="targetPsiText">18 – 22 PSI</span></span>
+            <span class="text-xs text-slate-300 font-medium">Manómetro Baja Presión</span>
+            <span class="text-xs font-mono font-bold text-ice">Meta: <span id="targetPsiText">18 – 22 PSI</span></span>
           </div>
           <div class="flex items-center justify-between gap-3">
-            <button type="button" id="btnPsiMinus" class="w-11 h-11 rounded-xl bg-card border border-borderDark text-white font-bold text-lg active:scale-95">-</button>
-            <div class="text-center">
-              <span id="currentPsiDisplay" class="text-3xl font-black text-white">14</span>
-              <span class="text-xs text-slate-400 ml-1">PSI</span>
+            <button type="button" id="btnPsiMinus" class="w-11 h-11 rounded-lg bg-panel border border-line text-white font-mono font-bold text-lg active:scale-95">-</button>
+            <div class="text-center mono-num">
+              <span id="currentPsiDisplay" class="text-3xl font-bold text-white">14</span>
+              <span class="text-xs font-mono text-slate-400 ml-1">PSI</span>
             </div>
-            <button type="button" id="btnPsiPlus" class="w-11 h-11 rounded-xl bg-card border border-borderDark text-white font-bold text-lg active:scale-95">+</button>
+            <button type="button" id="btnPsiPlus" class="w-11 h-11 rounded-lg bg-panel border border-line text-white font-mono font-bold text-lg active:scale-95">+</button>
           </div>
         </div>
 
-        <!-- Control Amperaje + Punto de Medición -->
-        <div class="bg-obsidian border border-borderDark rounded-xl p-3 space-y-2.5">
+        <!-- Amperaje y punto de medición -->
+        <div class="bg-obsidian border border-line rounded-xl p-3 space-y-2.5">
           <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-300 font-medium">Amperaje Pinza</span>
-            <button type="button" id="btnToggleClampHelp" class="text-[11px] text-sky-400 underline">¿Dónde medir?</button>
+            <span class="text-xs text-slate-300 font-medium">Pinza Amperimétrica</span>
+            <button type="button" id="btnToggleClampHelp" class="text-[11px] text-ice hover:underline">Guía de medición</button>
           </div>
 
-          <div id="clampHelpBox" class="hidden p-2.5 rounded-xl bg-sky-500/10 border border-sky-500/30 text-[11px] text-slate-200 space-y-1">
-            <p><strong>1. Directo al compresor (Ideal):</strong> Abraza <u>un solo cable</u> (Fase o Neutro) que entra al relé/térmico del compresor. Nunca abraces el cordón completo (marcaría 0 A).</p>
-            <p><strong>2. Cable general / enchufe:</strong> Si mides un hilo de la alimentación general, se suman forzadores y luces (~0.8 A extra). Selecciónalo abajo para compensarlo.</p>
+          <div id="clampHelpBox" class="hidden p-2.5 rounded-lg bg-ice/10 border border-ice/30 text-[11px] text-slate-200 space-y-1">
+            <p><strong>Directo al compresor:</strong> Abraza <u>un solo conductor</u> (fase o común) hacia relé/térmico. Nunca el cable completo (cancela el campo magnético y lee 0.0 A).</p>
+            <p><strong>Cable general:</strong> Si mides en alimentación general, incluye forzadores y luces (~0.8 A). Activa la compensación abajo.</p>
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
-              <label class="block text-[10px] text-slate-400 mb-1">Punto de medición</label>
-              <select id="selectClampPoint" class="w-full bg-card border border-borderDark rounded-lg px-2 py-1.5 text-[11px] text-white">
-                <option value="compressor" selected>Directo Compresor</option>
-                <option value="general">Cable General (+0.8A)</option>
+              <label class="block text-[10px] text-slate-400 mb-1">Punto de pinza</label>
+              <select id="selectClampPoint" class="w-full bg-panel border border-line rounded-lg px-2 py-1.5 text-[11px] text-white">
+                <option value="compressor" selected>Conductor Compresor</option>
+                <option value="general">Cable General (-0.8 A comp.)</option>
               </select>
             </div>
             <div>
               <label class="block text-[10px] text-slate-400 mb-1">RLA Nominal Placa (A)</label>
-              <input id="inputRlaNominal" type="number" step="0.1" value="2.1" class="w-full bg-card border border-borderDark rounded-lg px-2 py-1.5 text-[11px] text-white" />
+              <input id="inputRlaNominal" type="number" step="0.1" value="2.1" class="w-full bg-panel border border-line rounded-lg px-2 py-1.5 text-[11px] font-mono text-white" />
             </div>
           </div>
 
           <div class="flex items-center justify-between gap-3 pt-1">
-            <button type="button" id="btnAmpMinus" class="w-11 h-11 rounded-xl bg-card border border-borderDark text-white font-bold text-lg active:scale-95">-</button>
-            <div class="text-center">
-              <span id="currentAmpDisplay" class="text-3xl font-black text-white">1.7</span>
-              <span class="text-xs text-slate-400 ml-1">A</span>
-              <div id="ampAdjustedNote" class="text-[10px] text-slate-400">Compresor neto: 1.7 A</div>
+            <button type="button" id="btnAmpMinus" class="w-11 h-11 rounded-lg bg-panel border border-line text-white font-mono font-bold text-lg active:scale-95">-</button>
+            <div class="text-center mono-num">
+              <span id="currentAmpDisplay" class="text-3xl font-bold text-white">1.7</span>
+              <span class="text-xs font-mono text-slate-400 ml-1">A</span>
+              <div id="ampAdjustedNote" class="text-[10px] font-mono text-slate-400">Compresor neto: 1.7 A</div>
             </div>
-            <button type="button" id="btnAmpPlus" class="w-11 h-11 rounded-xl bg-card border border-borderDark text-white font-bold text-lg active:scale-95">+</button>
+            <button type="button" id="btnAmpPlus" class="w-11 h-11 rounded-lg bg-panel border border-line text-white font-mono font-bold text-lg active:scale-95">+</button>
           </div>
 
-          <!-- Barra de Amperaje -->
-          <div class="w-full h-2 bg-card rounded-full overflow-hidden">
+          <div class="w-full h-1.5 bg-panel rounded-full overflow-hidden">
             <div id="ampBar" class="h-full bg-emerald-400 transition-all duration-200" style="width: 75%;"></div>
           </div>
         </div>
 
-        <!-- Estado físico del retorno -->
+        <!-- Estado de succión / condensador -->
         <div>
-          <label class="block text-[11px] text-slate-400 mb-1">Estado tubo de succión / condensador</label>
-          <select id="selectSuctionState" class="w-full bg-obsidian border border-borderDark rounded-xl px-3 py-2 text-xs text-white">
-            <option value="sweating">Tubo retorno fresco / sudando normal</option>
-            <option value="dry" selected>Tubo retorno seco / tibio (falta retorno)</option>
-            <option value="frost">Escarcha llegando al compresor (exceso)</option>
-            <option value="hot_cond">Condensador muy caliente o tapado de polvo</option>
+          <label class="block text-[11px] text-slate-400 mb-1">Condición física de succión / condensador</label>
+          <select id="selectSuctionState" class="w-full bg-obsidian border border-line rounded-lg px-3 py-2 text-xs text-white">
+            <option value="sweating">Línea de succión fresca / condensación normal</option>
+            <option value="dry" selected>Línea de succión seca / tibia</option>
+            <option value="frost">Escarcha avanzando hacia compresor</option>
+            <option value="hot_cond">Condensador saturado / alta temperatura</option>
           </select>
         </div>
       </div>
 
-      <!-- SEMÁFORO Y GUÍA PASO A PASO -->
-      <div id="verdictCard" class="rounded-2xl p-4 border bg-amber-500/10 border-amber-500/40 space-y-2">
+      <!-- SEMÁFORO DE DIAGNÓSTICO -->
+      <div id="verdictCard" class="rounded-xl p-4 border bg-amber-500/10 border-amber-500/40 space-y-2">
         <div class="flex items-center justify-between">
-          <span id="verdictBadge" class="text-xs font-black uppercase tracking-wider text-amber-300">🟡 Carga Baja — Cargar por Pulsos</span>
-          <span id="verdictDelta" class="text-xs font-bold text-slate-300">-4 PSI</span>
+          <span id="verdictBadge" class="text-xs font-mono font-bold uppercase tracking-wider text-amber-300">CARGA BAJA — DOSIFICAR POR PULSOS</span>
+          <span id="verdictDelta" class="text-xs font-mono font-bold text-slate-300">-4 PSI</span>
         </div>
-        <p id="verdictExplanation" class="text-xs text-slate-200 leading-relaxed">
-          Presión por debajo del rango objetivo (18–22 PSI) y amperaje bajo el nominal. Abre la válvula del cilindro en fase vapor por 3 segundos, cierra y espera 2 minutos antes de volver a leer.
-        </p>
-        <div id="verdictStepList" class="text-[11px] text-slate-300 bg-obsidian/70 rounded-xl p-3 space-y-1 border border-borderDark">
-          <div>• Verifica que el equipo no esté en ciclo <strong>dEF</strong> antes de cargar.</div>
-          <div>• Carga siempre de a poco y observa que el tubo de succión comience a refrescar sin congelarse.</div>
-        </div>
+        <p id="verdictExplanation" class="text-xs text-slate-200 leading-relaxed"></p>
+        <div id="verdictStepList" class="text-[11px] text-slate-300 bg-obsidian/80 rounded-lg p-3 space-y-1 border border-line"></div>
       </div>
 
     </section>
 
     <!-- ========================================================= -->
-    <!-- PESTAÑA 2: DIAGNÓSTICO DE FALLAS (SIN FUGA DE GAS)        -->
+    <!-- PESTAÑA 2: FALLAS SIN FUGA DE GAS                         -->
     <!-- ========================================================= -->
     <section id="tab-fallas" class="tab-panel hidden space-y-3">
-      <div class="bg-card border border-borderDark rounded-2xl p-4 space-y-3">
+      <div class="bg-panel border border-line rounded-xl p-4 space-y-3">
         <div>
-          <h2 class="text-sm font-bold text-white">Diagnóstico Sin Fuga de Gas</h2>
-          <p class="text-xs text-slate-400">Más del 60% de las fallas en vitrinas son eléctricas, de flujo de aire o deshielo. Selecciona el síntoma para ver la verificación y sumarlo al informe:</p>
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-300">Fallas No Asociadas a Falta de Gas</h2>
+          <p class="text-xs text-slate-400 mt-0.5">Selecciona condiciones mecánicas, eléctricas o de deshielo para incluirlas en el reporte.</p>
         </div>
-
         <div id="faultsList" class="space-y-2.5"></div>
       </div>
     </section>
 
     <!-- ========================================================= -->
-    <!-- PESTAÑA 3: CÓDIGOS DE PANELES / CONTROLADORES             -->
+    <!-- PESTAÑA 3: CÓDIGOS DE PANELES                             -->
     <!-- ========================================================= -->
     <section id="tab-codigos" class="tab-panel hidden space-y-3">
-      <div class="bg-card border border-borderDark rounded-2xl p-4 space-y-3">
+      <div class="bg-panel border border-line rounded-xl p-4 space-y-3">
         <div class="flex items-center justify-between">
-          <h2 class="text-sm font-bold text-white">Diccionario de Visores Digitales</h2>
-          <span class="text-[11px] text-slate-400">Dixell · Carel · Elitech · Full Gauge</span>
+          <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-300">Códigos en Controladores</h2>
+          <span class="text-[11px] font-mono text-slate-400">Dixell · Carel · Elitech</span>
         </div>
-        <input id="inputSearchCode" type="text" placeholder="Buscar código: dEF, E1, P1, HA, dA, ACF..." class="w-full bg-obsidian border border-borderDark rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-sky-500" />
+        <input id="inputSearchCode" type="text" placeholder="Filtrar por código (dEF, E1, P1, HA, LA, dA, ACF)..." class="w-full bg-obsidian border border-line rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-ice" />
         <div id="codesContainer" class="space-y-2"></div>
       </div>
     </section>
 
     <!-- ========================================================= -->
-    <!-- PESTAÑA 4: GENERADOR DE INFORME (LOCAL/ZONAL VS TÉCNICO)  -->
+    <!-- PESTAÑA 4: INFORME (LOCAL/ZONAL VS TÉCNICO)               -->
     <!-- ========================================================= -->
-    <section id="tab-informe" class="tab-panel hidden space-y-4">
-      <div class="bg-card border border-borderDark rounded-2xl p-4 space-y-3 print-only-card">
+    <section id="tab-informe" class="tab-panel hidden space-y-3.5">
+      <div class="bg-panel border border-line rounded-xl p-4 space-y-3 print-box">
         <div class="flex flex-wrap items-center justify-between gap-2 no-print">
           <div>
-            <h2 class="text-sm font-bold text-white">Generador de Informe EDX</h2>
-            <p class="text-[11px] text-slate-400">Elige el formato según quién recibirá el reporte</p>
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-300">Emisión de Reporte</h2>
+            <p class="text-[11px] text-slate-400">Formato adaptado a destinatario operativo o técnico</p>
           </div>
-          <div class="flex rounded-xl overflow-hidden border border-borderDark">
-            <button type="button" id="btnReportClient" class="px-3 py-1.5 text-xs font-bold bg-sky-500 text-slate-950">
-              🏪 Para Local / Zonal
+          <div class="flex rounded-lg overflow-hidden border border-line">
+            <button type="button" id="btnReportClient" class="px-3 py-1.5 text-xs font-semibold bg-ice text-slate-950">
+              Local / Zonal
             </button>
-            <button type="button" id="btnReportTech" class="px-3 py-1.5 text-xs font-semibold bg-obsidian text-slate-300">
-              🔧 Técnico EDX
+            <button type="button" id="btnReportTech" class="px-3 py-1.5 text-xs font-medium bg-obsidian text-slate-300">
+              Técnico EDX
             </button>
           </div>
         </div>
 
-        <!-- Campos operativos para el informe -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 no-print">
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">Estado operativo final</label>
-            <select id="selectReportStatus" class="w-full bg-obsidian border border-borderDark rounded-xl px-3 py-2 text-xs text-white">
-              <option value="OPERATIVO">🟢 Operativo (Enfriando normal)</option>
-              <option value="OBSERVACION">🟡 Operativo con observación / seguimiento</option>
-              <option value="REPUESTO">🟠 Requiere repuesto / segunda visita</option>
-              <option value="CRITICO">🔴 Detenido — Resguardar mercadería</option>
+            <label class="block text-[11px] text-slate-400 mb-1">Estado de entrega</label>
+            <select id="selectReportStatus" class="w-full bg-obsidian border border-line rounded-lg px-3 py-2 text-xs text-white">
+              <option value="OPERATIVO">Operativo — Funcionamiento normal</option>
+              <option value="OBSERVACION">Operativo — En observación</option>
+              <option value="REPUESTO">Pendiente — Requiere repuesto</option>
+              <option value="CRITICO">Crítico — Resguardar mercadería</option>
             </select>
           </div>
           <div>
-            <label class="block text-[11px] text-slate-400 mb-1">Técnico responsable</label>
-            <input id="inputTechName" type="text" value="Eduardo Aravena — Soporte EDX" class="w-full bg-obsidian border border-borderDark rounded-xl px-3 py-2 text-xs text-white" />
+            <label class="block text-[11px] text-slate-400 mb-1">Técnico / Responsable</label>
+            <input id="inputTechName" type="text" value="Eduardo Aravena — Soporte EDX" class="w-full bg-obsidian border border-line rounded-lg px-3 py-2 text-xs text-white" />
           </div>
         </div>
 
         <div class="no-print">
-          <label class="block text-[11px] text-slate-400 mb-1">Trabajo realizado / Observación adicional</label>
-          <input id="inputCustomAction" type="text" placeholder="Ej. Limpieza de condensador, ajuste de carga y verificación de corte." class="w-full bg-obsidian border border-borderDark rounded-xl px-3 py-2 text-xs text-white" />
+          <label class="block text-[11px] text-slate-400 mb-1">Acción ejecutada / Nota</label>
+          <input id="inputCustomAction" type="text" placeholder="Ej. Limpieza de condensador, ajuste de carga y control de corte térmico." class="w-full bg-obsidian border border-line rounded-lg px-3 py-2 text-xs text-white" />
         </div>
 
-        <!-- Vista previa editable del texto del informe -->
         <div>
           <div class="flex items-center justify-between mb-1">
-            <span id="reportFormatLabel" class="text-[11px] font-semibold text-sky-400">Vista previa: Lenguaje claro para Jefe de Tienda / Zonal</span>
-            <span class="text-[10px] text-slate-400">Editable antes de enviar</span>
+            <span id="reportFormatLabel" class="text-[11px] font-medium text-ice">Vista: Resumen operativo para Local / Zonal</span>
+            <span class="text-[10px] font-mono text-slate-400">Editable</span>
           </div>
-          <textarea id="reportOutput" rows="13" class="w-full bg-obsidian border border-borderDark rounded-xl p-3 text-xs text-slate-100 leading-relaxed font-mono focus:outline-none focus:border-sky-500"></textarea>
+          <textarea id="reportOutput" rows="13" class="w-full bg-obsidian border border-line rounded-lg p-3 text-xs text-slate-100 leading-relaxed font-mono focus:outline-none focus:border-ice"></textarea>
         </div>
 
-        <!-- Botones de acción -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 no-print">
-          <button type="button" id="btnSaveHistory" class="py-2.5 px-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
-            💾 Guardar Historial
+          <button type="button" id="btnSaveHistory" class="py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs transition">
+            Guardar Historial
           </button>
-          <button type="button" id="btnCopyReport" class="py-2.5 px-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs transition">
-            📋 Copiar Texto
+          <button type="button" id="btnCopyReport" class="py-2.5 px-3 rounded-lg bg-ice hover:bg-sky-400 text-slate-950 font-bold text-xs transition">
+            Copiar Texto
           </button>
-          <button type="button" id="btnWhatsappReport" class="py-2.5 px-3 rounded-xl bg-[#25D366] hover:opacity-90 text-slate-950 font-bold text-xs transition">
-            💬 WhatsApp
+          <button type="button" id="btnWhatsappReport" class="py-2.5 px-3 rounded-lg bg-panelAlt hover:bg-[#1e2942] text-emerald-300 border border-emerald-500/40 font-semibold text-xs transition">
+            Enviar WhatsApp
           </button>
-          <button type="button" id="btnPrintReport" class="py-2.5 px-3 rounded-xl bg-obsidian hover:bg-cardHover text-white border border-borderDark font-semibold text-xs transition">
-            🖨️ PDF / Imprimir
+          <button type="button" id="btnPrintReport" class="py-2.5 px-3 rounded-lg bg-obsidian hover:bg-panelAlt text-slate-200 border border-line font-semibold text-xs transition">
+            Imprimir / PDF
           </button>
         </div>
       </div>
@@ -368,30 +371,30 @@
     <!-- PESTAÑA 5: HISTORIAL DE INFORMES                           -->
     <!-- ========================================================= -->
     <section id="tab-historial" class="tab-panel hidden space-y-3">
-      <div class="bg-card border border-borderDark rounded-2xl p-4 space-y-3">
+      <div class="bg-panel border border-line rounded-xl p-4 space-y-3">
         <div class="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h2 class="text-sm font-bold text-white">Historial de Intervenciones</h2>
-            <p class="text-[11px] text-slate-400">Guardado localmente en este dispositivo</p>
+            <h2 class="text-xs font-semibold uppercase tracking-wider text-slate-300">Historial de Reportes</h2>
+            <p class="text-[11px] text-slate-400">Almacenamiento local del navegador</p>
           </div>
           <div class="flex gap-1.5">
-            <button type="button" id="btnExportHistory" class="px-2.5 py-1.5 rounded-lg bg-obsidian border border-borderDark text-[11px] text-sky-400 font-semibold">
-              ⬇️ Respaldo JSON
+            <button type="button" id="btnExportHistory" class="px-2.5 py-1.5 rounded-lg bg-obsidian border border-line text-[11px] text-ice font-semibold">
+              Exportar JSON
             </button>
-            <button type="button" id="btnClearHistory" class="px-2.5 py-1.5 rounded-lg bg-obsidian border border-borderDark text-[11px] text-rose-400 font-semibold">
-              🗑️ Limpiar
+            <button type="button" id="btnClearHistory" class="px-2.5 py-1.5 rounded-lg bg-obsidian border border-line text-[11px] text-rose-400 font-semibold">
+              Borrar Todo
             </button>
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <input id="inputHistorySearch" type="text" placeholder="Buscar local o equipo..." class="sm:col-span-2 bg-obsidian border border-borderDark rounded-xl px-3 py-2 text-xs text-white" />
-          <select id="selectHistoryFilter" class="bg-obsidian border border-borderDark rounded-xl px-2.5 py-2 text-xs text-white">
+          <input id="inputHistorySearch" type="text" placeholder="Buscar local, equipo o texto..." class="sm:col-span-2 bg-obsidian border border-line rounded-lg px-3 py-2 text-xs text-white" />
+          <select id="selectHistoryFilter" class="bg-obsidian border border-line rounded-lg px-2.5 py-2 text-xs text-white">
             <option value="ALL">Todos los estados</option>
-            <option value="OPERATIVO">🟢 Operativo</option>
-            <option value="OBSERVACION">🟡 En observación</option>
-            <option value="REPUESTO">🟠 Requiere repuesto</option>
-            <option value="CRITICO">🔴 Crítico</option>
+            <option value="OPERATIVO">Operativo</option>
+            <option value="OBSERVACION">En observación</option>
+            <option value="REPUESTO">Requiere repuesto</option>
+            <option value="CRITICO">Crítico</option>
           </select>
         </div>
 
@@ -401,80 +404,74 @@
 
   </main>
 
-  <!-- MODAL ESCÁNER DE PLACA / PERFILES -->
+  <!-- MODAL ESCÁNER Y PERFILES -->
   <div id="scannerModal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 no-print">
-    <div class="bg-card border border-borderDark rounded-2xl w-full max-w-lg p-4 space-y-4 max-h-[90vh] overflow-y-auto">
-      <div class="flex items-center justify-between border-b border-borderDark pb-2.5">
+    <div class="bg-panel border border-line rounded-2xl w-full max-w-lg p-4 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-line pb-2.5">
         <div>
-          <h3 class="text-sm font-bold text-white">Escáner IA de Placa y Perfiles Rápidos</h3>
-          <p class="text-[11px] text-slate-400">Foto a etiqueta de compresor/vitrina o carga un perfil</p>
+          <h3 class="text-sm font-bold text-white">Lectura de Placa y Perfiles Rápidos</h3>
+          <p class="text-[11px] text-slate-400">Captura de etiqueta técnica o selección de plantilla</p>
         </div>
-        <button type="button" id="btnCloseScanner" class="w-8 h-8 rounded-lg bg-obsidian text-slate-300 font-bold">✕</button>
+        <button type="button" id="btnCloseScanner" class="w-8 h-8 rounded-lg bg-obsidian border border-line text-slate-300 font-mono text-xs">ESC</button>
       </div>
 
-      <!-- Foto con cámara / galería -->
       <div class="space-y-2">
-        <label class="block w-full cursor-pointer rounded-xl border-2 border-dashed border-sky-500/40 bg-obsidian/70 hover:bg-obsidian p-4 text-center transition">
+        <label class="block w-full cursor-pointer rounded-xl border border-dashed border-ice/40 bg-obsidian/70 hover:bg-obsidian p-4 text-center transition">
           <input id="inputPlatePhoto" type="file" accept="image/*" capture="environment" class="hidden" />
-          <div class="text-2xl mb-1">📸</div>
-          <div class="text-xs font-bold text-sky-400">Tomar Foto o Subir Etiqueta Técnica</div>
-          <div class="text-[11px] text-slate-400">Lee gas, amperaje nominal (RLA) y modelo automáticamente</div>
+          <div class="text-xs font-semibold text-ice">Seleccionar o tomar fotografía de placa / compresor</div>
+          <div class="text-[11px] text-slate-400 mt-0.5">Extrae gas, amperaje nominal y modelo</div>
         </label>
 
         <div id="photoPreviewWrap" class="hidden space-y-2">
-          <img id="photoPreviewImg" src="" alt="Vista previa placa" class="w-full h-40 object-cover rounded-xl border border-borderDark" />
-          <button type="button" id="btnAnalyzePhoto" class="w-full py-2.5 rounded-xl bg-sky-500 text-slate-950 font-bold text-xs">
-            ✨ Analizar Foto y Autorrellenar Campos
+          <img id="photoPreviewImg" src="" alt="Vista previa" class="w-full h-40 object-cover rounded-lg border border-line" />
+          <button type="button" id="btnAnalyzePhoto" class="w-full py-2.5 rounded-lg bg-ice text-slate-950 font-bold text-xs">
+            Analizar Imagen y Completar Campos
           </button>
         </div>
 
-        <details class="bg-obsidian border border-borderDark rounded-xl p-2.5 text-xs">
-          <summary class="cursor-pointer text-slate-300 font-semibold">⚙️ Configurar API Key de Gemini (Opcional para IA real)</summary>
+        <details class="bg-obsidian border border-line rounded-lg p-2.5 text-xs">
+          <summary class="cursor-pointer text-slate-300 font-semibold">API Key Gemini Vision (Opcional)</summary>
           <div class="mt-2 space-y-2">
-            <p class="text-[11px] text-slate-400">Si ingresas tu clave de Google AI Studio, la foto se analizará con visión real. Sin clave, se aplicará reconocimiento local asistido.</p>
-            <input id="inputGeminiKey" type="password" placeholder="AIzaSy..." class="w-full bg-card border border-borderDark rounded-lg px-2.5 py-1.5 text-xs text-white" />
-            <button type="button" id="btnSaveApiKey" class="px-3 py-1.5 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[11px] font-bold">Guardar Clave</button>
+            <p class="text-[11px] text-slate-400">Conecta tu clave de Gemini para lectura visual directa de etiquetas en fotos nuevas.</p>
+            <input id="inputGeminiKey" type="password" placeholder="AIzaSy..." class="w-full bg-panel border border-line rounded-lg px-2.5 py-1.5 text-xs text-white" />
+            <button type="button" id="btnSaveApiKey" class="px-3 py-1.5 rounded-lg bg-ice/15 text-ice border border-ice/40 text-[11px] font-semibold">Guardar Clave</button>
           </div>
         </details>
       </div>
 
-      <!-- Perfiles Rápidos -->
       <div class="space-y-2">
-        <span class="block text-xs font-semibold text-slate-300">Perfiles Rápidos en Terreno</span>
+        <span class="block text-xs font-semibold text-slate-300">Perfiles Rápidos</span>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          <button type="button" data-profile="ventus_curva" class="profile-btn text-left p-2.5 rounded-xl bg-obsidian hover:bg-cardHover border border-borderDark">
-            <div class="text-xs font-bold text-white">Ventus Vidrio Curvo</div>
-            <div class="text-[11px] text-slate-400">R134a · Media · 135g · 2.1 A</div>
+          <button type="button" data-profile="ventus_curva" class="profile-btn text-left p-2.5 rounded-lg bg-obsidian hover:bg-panelAlt border border-line">
+            <div class="text-xs font-semibold text-white">Ventus Vidrio Curvo</div>
+            <div class="text-[11px] font-mono text-slate-400">R134a · Media · 135g · 2.1A</div>
           </button>
-          <button type="button" data-profile="ventus_r290" class="profile-btn text-left p-2.5 rounded-xl bg-obsidian hover:bg-cardHover border border-borderDark">
-            <div class="text-xs font-bold text-white">Ventus Visicooler PRO</div>
-            <div class="text-[11px] text-slate-400">R290 · Media · 95g · 1.6 A</div>
+          <button type="button" data-profile="ventus_r290" class="profile-btn text-left p-2.5 rounded-lg bg-obsidian hover:bg-panelAlt border border-line">
+            <div class="text-xs font-semibold text-white">Ventus Visicooler PRO</div>
+            <div class="text-[11px] font-mono text-slate-400">R290 · Media · 95g · 1.6A</div>
           </button>
-          <button type="button" data-profile="hussmann_mural" class="profile-btn text-left p-2.5 rounded-xl bg-obsidian hover:bg-cardHover border border-borderDark">
-            <div class="text-xs font-bold text-white">Mural Lácteos Hussmann</div>
-            <div class="text-[11px] text-slate-400">R404A · Media · 850g · 5.8 A</div>
+          <button type="button" data-profile="hussmann_mural" class="profile-btn text-left p-2.5 rounded-lg bg-obsidian hover:bg-panelAlt border border-line">
+            <div class="text-xs font-semibold text-white">Mural Hussmann</div>
+            <div class="text-[11px] font-mono text-slate-400">R404A · Media · 850g · 5.8A</div>
           </button>
-          <button type="button" data-profile="isla_congelados" class="profile-btn text-left p-2.5 rounded-xl bg-obsidian hover:bg-cardHover border border-borderDark">
-            <div class="text-xs font-bold text-white">Isla Congelados (-20°C)</div>
-            <div class="text-[11px] text-slate-400">R404A · Baja · 620g · 4.6 A</div>
+          <button type="button" data-profile="isla_congelados" class="profile-btn text-left p-2.5 rounded-lg bg-obsidian hover:bg-panelAlt border border-line">
+            <div class="text-xs font-semibold text-white">Isla Congelados (-20 °C)</div>
+            <div class="text-[11px] font-mono text-slate-400">R404A · Baja · 620g · 4.6A</div>
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- TOAST NOTIFICACIÓN -->
-  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden bg-slate-900 border border-sky-500/50 text-white px-4 py-2.5 rounded-full text-xs font-semibold shadow-xl"></div>
+  <!-- TOAST -->
+  <div id="toast" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 hidden bg-panelAlt border border-ice/50 text-white px-4 py-2 rounded-lg text-xs font-semibold shadow-xl"></div>
 
   <script>
     (function () {
-      // ==========================================
-      // ESTADO GLOBAL DE LA APLICACIÓN
-      // ==========================================
       const state = {
-        mode: 'running', // 'running' | 'off'
+        mode: 'running',
         gas: 'R134a',
-        app: 'media', // 'media' | 'baja'
+        app: 'media',
         ambTemp: 'normal',
         cabTemp: 'cold',
         psi: 14,
@@ -484,7 +481,7 @@
         gramsNominal: '135g',
         suctionState: 'dry',
         selectedFaults: [],
-        reportFormat: 'client', // 'client' | 'tech'
+        reportFormat: 'client',
         history: []
       };
 
@@ -514,47 +511,44 @@
       const FAULTS_DB = [
         {
           id: 'condenser_dirty',
-          title: 'Condensador tapado / sucio',
-          techDesc: 'Alta presión de descarga, amperaje elevado y corte por protector térmico teniendo carga completa.',
-          clientDesc: 'La rejilla de ventilación del motor estaba obstruida con polvo/pelusa, impidiendo liberar calor.',
-          check: 'Revisar panal frontal/inferior con linterna y tocar filtro deshidratador (muy caliente).'
+          title: 'Condensador obstruido / sucio',
+          techDesc: 'Elevación de presión de descarga y consumo por disipación térmica deficiente.',
+          clientDesc: 'La rejilla de ventilación del equipo estaba cubierta de polvo o suciedad, impidiendo disipar calor.',
+          check: 'Inspeccionar panal condensador y temperatura de filtro deshidratador.'
         },
         {
           id: 'evap_fan',
           title: 'Forzador de evaporador detenido',
-          techDesc: 'Compresor trabaja normal pero no hay intercambio convectivo; evaporador se bloquea de hielo.',
-          clientDesc: 'El ventilador interno que distribuye el frío estaba detenido, impidiendo que baje la temperatura.',
-          check: 'Verificar giro del aspa al cerrar interruptor de puerta y voltaje 220V en bobina.'
+          techDesc: 'Sin circulación forzada de aire sobre evaporador; riesgo de bloqueo de escarcha.',
+          clientDesc: 'El ventilador interno que reparte el frío estaba detenido, impidiendo enfriar de forma pareja.',
+          check: 'Comprobar giro libre del aspa, microinterruptor de puerta y alimentación.'
         },
         {
           id: 'defrost_fail',
-          title: 'Falla de deshielo (Resistencia / Sensor P2)',
-          techDesc: 'Bloqueo total de hielo en serpentín tras 48-72h de operación; resistencia abierta o sonda P2 descalibrada.',
-          clientDesc: 'Se acumuló exceso de hielo interno por falla en el ciclo automático de descongelamiento.',
-          check: 'Medir continuidad en resistencia de deshielo, bimetal y lectura de sonda de evaporador.'
+          title: 'Falla en ciclo de deshielo',
+          techDesc: 'Acumulación progresiva de hielo en serpentín por resistencia, bimetal o sonda de deshielo.',
+          clientDesc: 'Se formó exceso de hielo en el evaporador por falla en el descongelamiento automático.',
+          check: 'Medir continuidad en resistencia/bimetal y verificar lectura de sonda de evaporador.'
         },
         {
           id: 'compressor_start',
-          title: 'Falla de arranque / Relé PTC / LRA',
-          techDesc: 'Consumo sube a LRA (>10A) por 3 segundos y dispara klixon sin lograr arrancar.',
-          clientDesc: 'El componente de arranque eléctrico del motor presentó falla y requiere reemplazo.',
-          check: 'Probar relé PTC/capacitor y medir continuidad/aislamiento en bornes C-S-R del compresor.'
+          title: 'Falla de arranque / Relé o LRA alto',
+          techDesc: 'Intento de partida con pico de corriente o corte por protector térmico sin arranque estable.',
+          clientDesc: 'El sistema de partida del compresor presentó falla y requiere revisión/reemplazo de componente.',
+          check: 'Revisar relé PTC/capacitor y comprobar continuidad y aislamiento en bornes del compresor.'
         }
       ];
 
       const CODES_DB = [
-        { code: 'dEF / DEF', brand: 'Todos (Dixell, Carel, Elitech)', meaning: 'Ciclo de deshielo activo. No es falla ni falta de gas; el compresor se detiene para derretir escarcha.', action: 'Esperar 15-25 min a que termine o mantener pulsada flecha arriba/deshielo 4 seg para salir.' },
-        { code: 'E1 / P1', brand: 'Dixell / Carel / Full Gauge', meaning: 'Falla en sonda de temperatura ambiente (gabinete). Cable cortado, sulfatado o sensor fuera de rango.', action: 'Revisar empalme de sonda NTC ambiente (10kΩ a 25°C) y reemplazar sensor.' },
-        { code: 'E2 / P2', brand: 'Dixell / Elitech', meaning: 'Falla en sonda de evaporador (fin de deshielo). Puede provocar deshielos incompletos o bloqueo de hielo.', action: 'Verificar sonda alojada en el serpentín del evaporador.' },
-        { code: 'HA / HI', brand: 'Todos', meaning: 'Alarma de alta temperatura en cabina. Puerta abierta mucho tiempo, carga caliente o falta de rendimiento.', action: 'Verificar cierre de burletes, limpieza de condensador y presiones.' },
-        { code: 'LA / LO', brand: 'Todos', meaning: 'Alarma de baja temperatura. Riesgo de congelamiento de producto.', action: 'Revisar SetPoint configurado y que el relé del compresor no haya quedado pegado.' },
-        { code: 'dA / dor', brand: 'Dixell / Carel', meaning: 'Alarma de puerta abierta (microswitch o sensor magnético activado).', action: 'Revisar alineación del imán o interruptor de marco de puerta.' },
-        { code: 'ACF / HP', brand: 'Hussmann / Carel', meaning: 'Alarma de alta presión o falla de ventilador condensador.', action: 'Limpiar condensador de inmediato y comprobar giro del forzador externo.' }
+        { code: 'dEF / DEF', brand: 'Dixell / Carel / Elitech', meaning: 'Ciclo de deshielo activo. El compresor se detiene temporalmente para fundir escarcha.', action: 'Aguardar término de ciclo o salir manualmente según manual del controlador.' },
+        { code: 'E1 / P1', brand: 'Dixell / Carel / Full Gauge', meaning: 'Falla en sonda de temperatura de cámara/ambiente.', action: 'Revisar cableado, bornera y resistencia NTC del sensor.' },
+        { code: 'E2 / P2', brand: 'Dixell / Elitech', meaning: 'Falla en sonda de evaporador (control de deshielo).', action: 'Verificar conexión y valor de sonda alojada en evaporador.' },
+        { code: 'HA / HI', brand: 'General', meaning: 'Alarma por temperatura superior al umbral configurado.', action: 'Controlar cierre de puertas, carga térmica y limpieza de condensador.' },
+        { code: 'LA / LO', brand: 'General', meaning: 'Alarma por temperatura inferior al límite establecido.', action: 'Revisar setpoint y estado del relé de control de compresor.' },
+        { code: 'dA / dor', brand: 'Dixell / Carel', meaning: 'Puerta abierta o contacto magnético/interruptor activado.', action: 'Revisar cierre de puerta y sensor de marco.' },
+        { code: 'ACF / HP', brand: 'Hussmann / Carel', meaning: 'Alarma de alta presión o ventilador de condensación.', action: 'Limpiar condensador y verificar funcionamiento del ventilador.' }
       ];
 
-      // ==========================================
-      // UTILIDADES DOM
-      // ==========================================
       const $ = (id) => document.getElementById(id);
 
       function showToast(msg) {
@@ -562,23 +556,20 @@
         t.textContent = msg;
         t.classList.remove('hidden');
         clearTimeout(window._toastTimer);
-        window._toastTimer = setTimeout(() => t.classList.add('hidden'), 2600);
+        window._toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
       }
 
-      // ==========================================
-      // NAVEGACIÓN ENTRE PESTAÑAS
-      // ==========================================
       document.querySelectorAll('.nav-tab').forEach((btn) => {
         btn.addEventListener('click', () => {
           const target = btn.dataset.tab;
           document.querySelectorAll('.nav-tab').forEach((b) => {
-            b.classList.remove('tab-active');
-            b.classList.add('tab-inactive');
+            b.classList.remove('tab-btn-active');
+            b.classList.add('tab-btn-idle');
           });
-          btn.classList.remove('tab-inactive');
-          btn.classList.add('tab-active');
+          btn.classList.remove('tab-btn-idle');
+          btn.classList.add('tab-btn-active');
 
-          document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.add('hidden'));
+          document.querySelectorAll('.tab-panel').forEach((p) => p.classList.add('hidden'));
           $('tab-' + target).classList.remove('hidden');
 
           if (target === 'informe') generateReport();
@@ -586,35 +577,19 @@
         });
       });
 
-      // ==========================================
-      // CÁLCULO DINÁMICO DE PRESIÓN Y AMPERAJE
-      // ==========================================
       function getTargetRange() {
         const gasData = PT_TABLE[state.gas];
-        if (state.mode === 'off') {
-          return gasData.staticOff[state.ambTemp];
-        }
+        if (state.mode === 'off') return gasData.staticOff[state.ambTemp];
         let [min, max] = [...gasData[state.app]];
-        if (state.ambTemp === 'hot') {
-          min += 2;
-          max += 3;
-        } else if (state.ambTemp === 'cool') {
-          min = Math.max(0, min - 2);
-          max = Math.max(2, max - 2);
-        }
-        if (state.cabTemp === 'warm') {
-          min += 4;
-          max += 6;
-        }
+        if (state.ambTemp === 'hot') { min += 2; max += 3; }
+        else if (state.ambTemp === 'cool') { min = Math.max(0, min - 2); max = Math.max(2, max - 2); }
+        if (state.cabTemp === 'warm') { min += 4; max += 6; }
         return [min, max];
       }
 
       function getNetCompressorAmp() {
         const raw = Number(state.amp) || 0;
-        if (state.clampPoint === 'general') {
-          return Math.max(0, +(raw - 0.8).toFixed(1));
-        }
-        return +raw.toFixed(1);
+        return state.clampPoint === 'general' ? Math.max(0, +(raw - 0.8).toFixed(1)) : +raw.toFixed(1);
       }
 
       function updateCalculationUI() {
@@ -627,19 +602,17 @@
         const rla = Math.max(0.5, Number(state.rlaNominal) || 2.1);
         $('ampAdjustedNote').textContent =
           state.clampPoint === 'general'
-            ? `Compresor neto estimado: ${netAmp.toFixed(1)} A (descontando 0.8 A forzadores/luces)`
-            : `Medición directa compresor (Nominal: ${rla.toFixed(1)} A)`;
+            ? `Compresor neto estimado: ${netAmp.toFixed(1)} A (-0.8 A auxiliares)`
+            : `Medición directa compresor (RLA: ${rla.toFixed(1)} A)`;
 
         $('cargaNominalLabel').textContent = `Placa: ~${state.gramsNominal} | RLA: ${rla.toFixed(1)}A`;
 
-        // Barra amperaje
         const ampPct = Math.min(100, Math.round((netAmp / rla) * 100));
         const ampBar = $('ampBar');
         ampBar.style.width = `${ampPct}%`;
         ampBar.className = 'h-full transition-all duration-200 ' +
           (netAmp > rla * 1.05 ? 'bg-rose-500' : netAmp >= rla * 0.75 ? 'bg-emerald-400' : 'bg-amber-400');
 
-        // Evaluación Semáforo
         const card = $('verdictCard');
         const badge = $('verdictBadge');
         const deltaEl = $('verdictDelta');
@@ -649,75 +622,72 @@
         if (state.mode === 'off') {
           const diff = state.psi < minPsi ? state.psi - minPsi : state.psi > maxPsi ? state.psi - maxPsi : 0;
           deltaEl.textContent = diff === 0 ? 'Equilibrio OK' : `${diff > 0 ? '+' : ''}${diff} PSI`;
-          card.className = 'rounded-2xl p-4 border bg-sky-500/10 border-sky-500/40 space-y-2';
-          badge.className = 'text-xs font-black uppercase tracking-wider text-sky-300';
-          badge.textContent = '🛑 Modo Equipo Apagado / En Vacío';
-          expEl.textContent = `Con el compresor detenido a temperatura ambiente actual, la presión estática de equilibrio debe situarse entre ${minPsi} y ${maxPsi} PSI. Si vienes de hacer vacío (-29.9 inHg), rompe el vacío en fase vapor hasta ~40 PSI antes de encender el motor.`;
+          card.className = 'rounded-xl p-4 border bg-sky-500/10 border-sky-500/40 space-y-2';
+          badge.className = 'text-xs font-mono font-bold uppercase tracking-wider text-sky-300';
+          badge.textContent = 'MODO APAGADO / CARGA ESTÁTICA';
+          expEl.textContent = `Con equipo detenido, el equilibrio estimado según ambiente es de ${minPsi} a ${maxPsi} PSI. Tras vacío, rompe vacío en fase vapor hasta ~40 PSI antes de arrancar.`;
           stepsEl.innerHTML = `
-            <div>1. <strong>Nunca cargues líquido con el compresor andando</strong> por baja (riesgo de golpe de líquido).</div>
-            <div>2. Una vez alcanzada presión positiva (~40 PSI), enciende la vitrina y pasa esta app a <strong>Equipo Andando</strong> para afinar.</div>
+            <div>1. No introducir refrigerante líquido en succión con compresor en marcha.</div>
+            <div>2. Al iniciar compresor, cambia a <strong>Equipo Andando</strong> para ajustar el rango dinámico.</div>
           `;
           generateReport();
           return;
         }
 
-        // Modo Andando
         if (netAmp > rla * 1.08 || state.suctionState === 'frost' || state.psi > maxPsi + 3) {
-          card.className = 'rounded-2xl p-4 border bg-rose-500/15 border-rose-500/50 space-y-2';
-          badge.className = 'text-xs font-black uppercase tracking-wider text-rose-300';
-          badge.textContent = '🔴 ¡ALTO! No Cargar Más Gas';
+          card.className = 'rounded-xl p-4 border bg-rose-500/15 border-rose-500/50 space-y-2';
+          badge.className = 'text-xs font-mono font-bold uppercase tracking-wider text-rose-300';
+          badge.textContent = 'DETENER CARGA — REVISAR CONDICIÓN';
           deltaEl.textContent = `+${Math.max(0, state.psi - maxPsi)} PSI / ${netAmp}A`;
           expEl.textContent =
             netAmp > rla * 1.08
-              ? `El amperaje neto (${netAmp} A) supera el nominal de placa (${rla} A). Si sigues cargando puedes dañar el compresor. Revisa condensador sucio, forzador externo detenido o sobrecarga.`
-              : `Hay retorno de escarcha o sobrepresión por encima de ${maxPsi} PSI. Purga lentamente el exceso hasta que desaparezca el hielo en la succión.`;
+              ? `Consumo neto (${netAmp} A) por encima del RLA (${rla} A). Evaluar condensador sucio, ventilador externo o exceso de carga.`
+              : `Presión o retorno por sobre lo esperado (${maxPsi} PSI). Evitar agregar refrigerante y corregir retorno/disipación.`;
           stepsEl.innerHTML = `
-            <div>• Revisa limpieza del condensador y giro del ventilador externo antes de tocar válvulas.</div>
-            <div>• Si hubo sobrecarga, recupera/purga en pulsos cortos de 2 segundos y espera 3 minutos.</div>
+            <div>• Verificar limpieza de condensador y giro del forzador antes de ajustar carga.</div>
+            <div>• Si hay exceso, retirar en pulsos breves y estabilizar 3 minutos.</div>
           `;
         } else if (state.psi < minPsi) {
           const diff = state.psi - minPsi;
-          card.className = 'rounded-2xl p-4 border bg-amber-500/10 border-amber-500/40 space-y-2';
-          badge.className = 'text-xs font-black uppercase tracking-wider text-amber-300';
-          badge.textContent = '🟡 Presión Baja — Cargar por Pulsos';
+          card.className = 'rounded-xl p-4 border bg-amber-500/10 border-amber-500/40 space-y-2';
+          badge.className = 'text-xs font-mono font-bold uppercase tracking-wider text-amber-300';
+          badge.textContent = 'PRESIÓN BAJA — PULSOS DE CARGA';
           deltaEl.textContent = `${diff} PSI`;
-          expEl.textContent = `Faltan aprox. ${Math.abs(diff)} PSI para entrar en el rango ideal (${minPsi}–${maxPsi} PSI) y el amperaje (${netAmp} A de ${rla} A) aún tiene margen seguro.`;
+          expEl.textContent = `Lectura bajo el rango objetivo (${minPsi}–${maxPsi} PSI) con consumo neto de ${netAmp} A frente a ${rla} A nominales.`;
           stepsEl.innerHTML = `
-            <div>• Abre la válvula del cilindro en <strong>fase vapor</strong> por 3 segundos y cierra.</div>
-            <div>• Espera 2 minutos a que estabilice presión y amperaje antes de repetir.</div>
-            <div>• Detente apenas el tubo de succión se sienta frío/sudando y entres a ${minPsi}–${maxPsi} PSI.</div>
+            <div>• Suministrar en fase vapor durante 2 a 3 segundos, cerrar y esperar 2 minutos.</div>
+            <div>• Controlar que el retorno enfríe gradualmente sin escarcha excesiva.</div>
           `;
         } else {
-          card.className = 'rounded-2xl p-4 border bg-emerald-500/10 border-emerald-500/40 space-y-2';
-          badge.className = 'text-xs font-black uppercase tracking-wider text-emerald-300';
-          badge.textContent = '🟢 Carga Óptima en Rango';
+          card.className = 'rounded-xl p-4 border bg-emerald-500/10 border-emerald-500/40 space-y-2';
+          badge.className = 'text-xs font-mono font-bold uppercase tracking-wider text-emerald-300';
+          badge.textContent = 'PARÁMETROS DENTRO DE RANGO';
           deltaEl.textContent = 'OK';
-          expEl.textContent = `Presión (${state.psi} PSI) dentro del objetivo (${minPsi}–${maxPsi} PSI) y amperaje neto (${netAmp} A) saludable respecto al nominal (${rla} A).`;
+          expEl.textContent = `Presión (${state.psi} PSI) dentro del rango objetivo (${minPsi}–${maxPsi} PSI) y amperaje neto (${netAmp} A / ${rla} A) estable.`;
           stepsEl.innerHTML = `
-            <div>• Verifica que el visor digital baje de temperatura de forma constante hasta el corte.</div>
-            <div>• Retira mangueras, coloca tapas de válvula con óring y verifica ausencia de fugas con espuma.</div>
+            <div>• Confirmar descenso sostenido de temperatura en visor y corte normal.</div>
+            <div>• Retirar manifold, instalar tapas con sello y comprobar estanqueidad.</div>
           `;
         }
 
         generateReport();
       }
 
-      // Eventos controles de carga
       $('btnModeRunning').addEventListener('click', () => {
         state.mode = 'running';
-        $('btnModeRunning').className = 'py-2.5 px-3 rounded-xl font-bold text-xs bg-sky-500 text-slate-950 transition';
-        $('btnModeOff').className = 'py-2.5 px-3 rounded-xl font-semibold text-xs bg-obsidian text-slate-400 border border-borderDark transition';
-        $('badgeEstadoCompresor').textContent = 'En marcha';
-        $('badgeEstadoCompresor').className = 'text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+        $('btnModeRunning').className = 'py-2.5 px-3 rounded-lg font-semibold text-xs bg-ice text-slate-950 border border-ice transition';
+        $('btnModeOff').className = 'py-2.5 px-3 rounded-lg font-medium text-xs bg-obsidian text-slate-400 border border-line transition';
+        $('badgeEstadoCompresor').textContent = 'MARCHA';
+        $('badgeEstadoCompresor').className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30';
         updateCalculationUI();
       });
 
       $('btnModeOff').addEventListener('click', () => {
         state.mode = 'off';
-        $('btnModeOff').className = 'py-2.5 px-3 rounded-xl font-bold text-xs bg-sky-500 text-slate-950 transition';
-        $('btnModeRunning').className = 'py-2.5 px-3 rounded-xl font-semibold text-xs bg-obsidian text-slate-400 border border-borderDark transition';
-        $('badgeEstadoCompresor').textContent = 'Detenido';
-        $('badgeEstadoCompresor').className = 'text-[11px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30';
+        $('btnModeOff').className = 'py-2.5 px-3 rounded-lg font-semibold text-xs bg-ice text-slate-950 border border-ice transition';
+        $('btnModeRunning').className = 'py-2.5 px-3 rounded-lg font-medium text-xs bg-obsidian text-slate-400 border border-line transition';
+        $('badgeEstadoCompresor').textContent = 'DETENIDO';
+        $('badgeEstadoCompresor').className = 'text-[11px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30';
         updateCalculationUI();
       });
 
@@ -725,9 +695,9 @@
         btn.addEventListener('click', () => {
           state.gas = btn.dataset.gas;
           document.querySelectorAll('.gas-btn').forEach((b) => {
-            b.className = 'gas-btn py-2 rounded-xl text-xs font-semibold bg-obsidian text-slate-300 border border-borderDark';
+            b.className = 'gas-btn py-2 rounded-lg text-xs font-mono font-medium bg-obsidian text-slate-300 border border-line';
           });
-          btn.className = 'gas-btn py-2 rounded-xl text-xs font-bold bg-sky-500 text-slate-950';
+          btn.className = 'gas-btn py-2 rounded-lg text-xs font-mono font-bold bg-ice text-slate-950 border border-ice';
           $('r290Alert').classList.toggle('hidden', state.gas !== 'R290');
           updateCalculationUI();
         });
@@ -735,68 +705,29 @@
 
       $('btnAppMedia').addEventListener('click', () => {
         state.app = 'media';
-        $('btnAppMedia').className = 'py-2.5 px-3 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/50';
-        $('btnAppBaja').className = 'py-2.5 px-3 rounded-xl text-xs font-semibold bg-obsidian text-slate-400 border border-borderDark';
+        $('btnAppMedia').className = 'py-2 px-3 rounded-lg text-xs font-semibold bg-ice/15 text-ice border border-ice/40';
+        $('btnAppBaja').className = 'py-2 px-3 rounded-lg text-xs font-medium bg-obsidian text-slate-400 border border-line';
         updateCalculationUI();
       });
 
       $('btnAppBaja').addEventListener('click', () => {
         state.app = 'baja';
-        $('btnAppBaja').className = 'py-2.5 px-3 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/50';
-        $('btnAppMedia').className = 'py-2.5 px-3 rounded-xl text-xs font-semibold bg-obsidian text-slate-400 border border-borderDark';
+        $('btnAppBaja').className = 'py-2 px-3 rounded-lg text-xs font-semibold bg-ice/15 text-ice border border-ice/40';
+        $('btnAppMedia').className = 'py-2 px-3 rounded-lg text-xs font-medium bg-obsidian text-slate-400 border border-line';
         updateCalculationUI();
       });
 
-      $('selectAmbTemp').addEventListener('change', (e) => {
-        state.ambTemp = e.target.value;
-        updateCalculationUI();
-      });
+      $('selectAmbTemp').addEventListener('change', (e) => { state.ambTemp = e.target.value; updateCalculationUI(); });
+      $('selectCabTemp').addEventListener('change', (e) => { state.cabTemp = e.target.value; updateCalculationUI(); });
+      $('btnPsiMinus').addEventListener('click', () => { state.psi = Math.max(0, state.psi - 1); updateCalculationUI(); });
+      $('btnPsiPlus').addEventListener('click', () => { state.psi = Math.min(250, state.psi + 1); updateCalculationUI(); });
+      $('btnAmpMinus').addEventListener('click', () => { state.amp = Math.max(0, +(state.amp - 0.1).toFixed(1)); updateCalculationUI(); });
+      $('btnAmpPlus').addEventListener('click', () => { state.amp = Math.min(40, +(state.amp + 0.1).toFixed(1)); updateCalculationUI(); });
+      $('btnToggleClampHelp').addEventListener('click', () => { $('clampHelpBox').classList.toggle('hidden'); });
+      $('selectClampPoint').addEventListener('change', (e) => { state.clampPoint = e.target.value; updateCalculationUI(); });
+      $('inputRlaNominal').addEventListener('input', (e) => { state.rlaNominal = parseFloat(e.target.value) || 1.0; updateCalculationUI(); });
+      $('selectSuctionState').addEventListener('change', (e) => { state.suctionState = e.target.value; updateCalculationUI(); });
 
-      $('selectCabTemp').addEventListener('change', (e) => {
-        state.cabTemp = e.target.value;
-        updateCalculationUI();
-      });
-
-      $('btnPsiMinus').addEventListener('click', () => {
-        state.psi = Math.max(0, state.psi - 1);
-        updateCalculationUI();
-      });
-      $('btnPsiPlus').addEventListener('click', () => {
-        state.psi = Math.min(250, state.psi + 1);
-        updateCalculationUI();
-      });
-
-      $('btnAmpMinus').addEventListener('click', () => {
-        state.amp = Math.max(0, +(state.amp - 0.1).toFixed(1));
-        updateCalculationUI();
-      });
-      $('btnAmpPlus').addEventListener('click', () => {
-        state.amp = Math.min(40, +(state.amp + 0.1).toFixed(1));
-        updateCalculationUI();
-      });
-
-      $('btnToggleClampHelp').addEventListener('click', () => {
-        $('clampHelpBox').classList.toggle('hidden');
-      });
-
-      $('selectClampPoint').addEventListener('change', (e) => {
-        state.clampPoint = e.target.value;
-        updateCalculationUI();
-      });
-
-      $('inputRlaNominal').addEventListener('input', (e) => {
-        state.rlaNominal = parseFloat(e.target.value) || 1.0;
-        updateCalculationUI();
-      });
-
-      $('selectSuctionState').addEventListener('change', (e) => {
-        state.suctionState = e.target.value;
-        updateCalculationUI();
-      });
-
-      // ==========================================
-      // PESTAÑA FALLAS SIN GAS
-      // ==========================================
       function renderFaults() {
         const container = $('faultsList');
         container.innerHTML = '';
@@ -804,19 +735,19 @@
           const isSelected = state.selectedFaults.includes(f.id);
           const div = document.createElement('div');
           div.className = `p-3 rounded-xl border transition ${
-            isSelected ? 'bg-sky-500/15 border-sky-500/60' : 'bg-obsidian border-borderDark'
+            isSelected ? 'bg-ice/10 border-ice/50' : 'bg-obsidian border-line'
           }`;
           div.innerHTML = `
             <div class="flex items-start justify-between gap-2">
               <div>
-                <div class="text-xs font-bold text-white">${f.title}</div>
+                <div class="text-xs font-semibold text-white">${f.title}</div>
                 <p class="text-[11px] text-slate-300 mt-1">${f.techDesc}</p>
-                <p class="text-[11px] text-sky-300 mt-1"><strong>Verificación:</strong> ${f.check}</p>
+                <p class="text-[11px] text-ice mt-1">Control: ${f.check}</p>
               </div>
-              <button type="button" data-fault="${f.id}" class="toggle-fault shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-bold ${
-                isSelected ? 'bg-sky-500 text-slate-950' : 'bg-card text-slate-300 border border-borderDark'
+              <button type="button" data-fault="${f.id}" class="toggle-fault shrink-0 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold ${
+                isSelected ? 'bg-ice text-slate-950' : 'bg-panel text-slate-300 border border-line'
               }">
-                ${isSelected ? '✓ En Informe' : '+ Sumar'}
+                ${isSelected ? 'Incluida' : 'Agregar'}
               </button>
             </div>
           `;
@@ -833,14 +764,11 @@
             }
             renderFaults();
             generateReport();
-            showToast('Diagnóstico actualizado en el informe');
+            showToast('Diagnóstico actualizado');
           });
         });
       }
 
-      // ==========================================
-      // PESTAÑA CÓDIGOS DE PANEL
-      // ==========================================
       function renderCodes(filter = '') {
         const container = $('codesContainer');
         const q = filter.trim().toLowerCase();
@@ -853,13 +781,13 @@
         container.innerHTML = list
           .map(
             (c) => `
-          <div class="p-3 rounded-xl bg-obsidian border border-borderDark space-y-1">
+          <div class="p-3 rounded-xl bg-obsidian border border-line space-y-1">
             <div class="flex items-center justify-between">
-              <span class="text-xs font-black text-sky-400">${c.code}</span>
-              <span class="text-[10px] text-slate-400">${c.brand}</span>
+              <span class="text-xs font-mono font-bold text-ice">${c.code}</span>
+              <span class="text-[10px] font-mono text-slate-400">${c.brand}</span>
             </div>
             <p class="text-xs text-slate-200">${c.meaning}</p>
-            <p class="text-[11px] text-emerald-300"><strong>Acción:</strong> ${c.action}</p>
+            <p class="text-[11px] text-emerald-300">Acción: ${c.action}</p>
           </div>
         `
           )
@@ -868,11 +796,8 @@
 
       $('inputSearchCode').addEventListener('input', (e) => renderCodes(e.target.value));
 
-      // ==========================================
-      // GENERADOR DE INFORME (LOCAL/ZONAL VS TÉCNICO)
-      // ==========================================
       function generateReport() {
-        const local = $('inputLocal').value.trim() || 'Local / Punto de Venta';
+        const local = $('inputLocal').value.trim() || 'Local / Sucursal';
         const equipo = $('inputEquipo').value.trim() || 'Equipo Refrigerado';
         const statusVal = $('selectReportStatus').value;
         const techName = $('inputTechName').value.trim() || 'Soporte Técnico EDX';
@@ -885,11 +810,11 @@
           minute: '2-digit'
         });
 
-        const statusMapClient = {
-          OPERATIVO: '🟢 OPERATIVO (Enfriando con normalidad)',
-          OBSERVACION: '🟡 OPERATIVO CON SEGUIMIENTO',
-          REPUESTO: '🟠 REQUIERE REPUESTO / SEGUNDA VISITA',
-          CRITICO: '🔴 DETENIDO — RESGUARDAR MERCADERÍA'
+        const statusMap = {
+          OPERATIVO: 'OPERATIVO — Funcionamiento normal',
+          OBSERVACION: 'OPERATIVO — En observación',
+          REPUESTO: 'PENDIENTE — Requiere repuesto',
+          CRITICO: 'CRÍTICO — Resguardar mercadería'
         };
 
         const activeFaultObjects = FAULTS_DB.filter((f) => state.selectedFaults.includes(f.id));
@@ -897,95 +822,91 @@
         const netAmp = getNetCompressorAmp();
 
         if (state.reportFormat === 'client') {
-          $('reportFormatLabel').textContent = 'Vista previa: Lenguaje claro para Jefe de Tienda / Zonal';
+          $('reportFormatLabel').textContent = 'Vista: Resumen operativo para Local / Zonal';
 
           let hallazgoSimple = '';
           if (activeFaultObjects.length > 0) {
-            hallazgoSimple = activeFaultObjects.map((f) => `• ${f.clientDesc}`).join('\n');
+            hallazgoSimple = activeFaultObjects.map((f) => `- ${f.clientDesc}`).join('\n');
           } else if (state.psi < minPsi) {
-            hallazgoSimple = '• El equipo presentaba bajo nivel de frío/gas refrigerante, por lo que no alcanzaba la temperatura adecuada.';
+            hallazgoSimple = '- El equipo presentaba rendimiento bajo de frío por falta de carga refrigerante.';
           } else {
-            hallazgoSimple = '• Revisión preventiva y control de funcionamiento del sistema de frío.';
+            hallazgoSimple = '- Revisión de funcionamiento y control térmico del equipo.';
           }
 
           let recomendacionLocal = '';
           if (statusVal === 'CRITICO') {
-            recomendacionLocal = 'Trasladar de inmediato los productos perecibles/refrigerados a otra vitrina o cámara de respaldo mientras se repara.';
+            recomendacionLocal = 'Trasladar productos sensibles a frío a unidad de respaldo mientras se completa la reparación.';
           } else if (statusVal === 'REPUESTO') {
-            recomendacionLocal = 'Mantener puertas cerradas el mayor tiempo posible y vigilar temperatura del visor hasta la instalación del repuesto.';
+            recomendacionLocal = 'Minimizar aperturas de puerta y monitorear temperatura hasta instalar el repuesto.';
           } else {
-            recomendacionLocal = 'No obstruir las rejillas inferiores/frontales de ventilación con cajas ni mercadería y verificar temperatura en 2 horas.';
+            recomendacionLocal = 'Mantener rejillas de ventilación libres de obstrucciones y revisar temperatura en 2 horas.';
           }
 
-          const textoCliente = [
-            `REPORTE DE MANTENCIÓN DE FRÍO — EDX`,
+          $('reportOutput').value = [
+            `REPORTE OPERATIVO — FRÍOASIST AI EDX`,
             `Fecha: ${nowStr}`,
             `Local: ${local}`,
             `Equipo: ${equipo}`,
-            `Estado: ${statusMapClient[statusVal]}`,
+            `Estado: ${statusMap[statusVal]}`,
             ``,
-            `¿QUÉ SE DETECTÓ?`,
+            `DIAGNÓSTICO:`,
             hallazgoSimple,
             ``,
             `TRABAJO REALIZADO:`,
-            customAction ? `• ${customAction}` : `• Se realizó revisión general, ajuste operacional y verificación de ciclo de enfriamiento.`,
+            customAction ? `- ${customAction}` : `- Inspección, ajuste operativo y comprobación de enfriamiento.`,
             ``,
             `INDICACIÓN PARA EL LOCAL / ZONAL:`,
-            `• ${recomendacionLocal}`,
+            `- ${recomendacionLocal}`,
             ``,
-            `Atendido por: ${techName}`
+            `Responsable: ${techName}`
           ].join('\n');
-
-          $('reportOutput').value = textoCliente;
         } else {
-          $('reportFormatLabel').textContent = 'Vista previa: Ficha Técnica Detallada EDX';
+          $('reportFormatLabel').textContent = 'Vista: Ficha Técnica EDX';
 
           const fallasTech =
             activeFaultObjects.length > 0
-              ? activeFaultObjects.map((f) => `• ${f.title}: ${f.techDesc}`).join('\n')
-              : '• Sin averías mecánicas/eléctricas adicionales registradas.';
+              ? activeFaultObjects.map((f) => `- ${f.title}: ${f.techDesc}`).join('\n')
+              : '- Sin averías adicionales registradas.';
 
           const suctionLabels = {
-            sweating: 'Retorno fresco / sudando normal',
-            dry: 'Retorno seco / tibio',
-            frost: 'Escarcha en succión hacia compresor',
-            hot_cond: 'Condensador con alta temperatura / obstruido'
+            sweating: 'Succión fresca / condensación normal',
+            dry: 'Succión seca / tibia',
+            frost: 'Escarcha hacia compresor',
+            hot_cond: 'Condensador con alta temperatura / saturado'
           };
 
-          const textoTecnico = [
-            `INFORME TÉCNICO DE REFRIGERACIÓN — FRÍOASIST AI EDX`,
+          $('reportOutput').value = [
+            `FICHA TÉCNICA — FRÍOASIST AI EDX`,
             `Fecha/Hora: ${nowStr} | Técnico: ${techName}`,
             `Local: ${local} | Equipo: ${equipo}`,
-            `Estado Final: ${statusMapClient[statusVal]}`,
+            `Estado: ${statusMap[statusVal]}`,
             `----------------------------------------`,
-            `PARÁMETROS DE CICLO Y CARGA:`,
-            `• Refrigerante: ${state.gas} (${state.app === 'media' ? 'Media Temp.' : 'Baja Temp.'}) | Placa: ~${state.gramsNominal}`,
-            `• Presión Baja Medida: ${state.psi} PSI (Rango objetivo: ${minPsi}–${maxPsi} PSI)`,
-            `• Amperaje Pinza: ${state.amp.toFixed(1)} A (${state.clampPoint === 'general' ? 'Cable general, neto compresor ~' + netAmp + ' A' : 'Directo compresor'}) | RLA Placa: ${state.rlaNominal} A`,
-            `• Estado Succión/Condensador: ${suctionLabels[state.suctionState]}`,
+            `DATOS DE CICLO:`,
+            `- Refrigerante: ${state.gas} (${state.app === 'media' ? 'Media Temp.' : 'Baja Temp.'}) | Placa: ~${state.gramsNominal}`,
+            `- Baja Presión: ${state.psi} PSI (Objetivo: ${minPsi}–${maxPsi} PSI)`,
+            `- Pinza: ${state.amp.toFixed(1)} A (${state.clampPoint === 'general' ? 'General, neto ~' + netAmp + ' A' : 'Compresor directo'}) | RLA: ${state.rlaNominal} A`,
+            `- Condición física: ${suctionLabels[state.suctionState]}`,
             `----------------------------------------`,
-            `DIAGNÓSTICO Y HALLAZGOS:`,
+            `OBSERVACIONES TÉCNICAS:`,
             fallasTech,
-            customAction ? `• Intervención: ${customAction}` : ''
+            customAction ? `- Intervención: ${customAction}` : ''
           ]
             .filter(Boolean)
             .join('\n');
-
-          $('reportOutput').value = textoTecnico;
         }
       }
 
       $('btnReportClient').addEventListener('click', () => {
         state.reportFormat = 'client';
-        $('btnReportClient').className = 'px-3 py-1.5 text-xs font-bold bg-sky-500 text-slate-950';
-        $('btnReportTech').className = 'px-3 py-1.5 text-xs font-semibold bg-obsidian text-slate-300';
+        $('btnReportClient').className = 'px-3 py-1.5 text-xs font-semibold bg-ice text-slate-950';
+        $('btnReportTech').className = 'px-3 py-1.5 text-xs font-medium bg-obsidian text-slate-300';
         generateReport();
       });
 
       $('btnReportTech').addEventListener('click', () => {
         state.reportFormat = 'tech';
-        $('btnReportTech').className = 'px-3 py-1.5 text-xs font-bold bg-sky-500 text-slate-950';
-        $('btnReportClient').className = 'px-3 py-1.5 text-xs font-semibold bg-obsidian text-slate-300';
+        $('btnReportTech').className = 'px-3 py-1.5 text-xs font-semibold bg-ice text-slate-950';
+        $('btnReportClient').className = 'px-3 py-1.5 text-xs font-medium bg-obsidian text-slate-300';
         generateReport();
       });
 
@@ -997,26 +918,22 @@
       $('btnCopyReport').addEventListener('click', async () => {
         try {
           await navigator.clipboard.writeText($('reportOutput').value);
-          showToast('Informe copiado al portapapeles');
+          showToast('Reporte copiado');
         } catch {
           $('reportOutput').select();
           document.execCommand('copy');
-          showToast('Informe copiado');
+          showToast('Reporte copiado');
         }
       });
 
       $('btnWhatsappReport').addEventListener('click', () => {
-        const text = encodeURIComponent($('reportOutput').value);
-        window.open(`https://wa.me/?text=${text}`, '_blank');
+        window.open(`https://wa.me/?text=${encodeURIComponent($('reportOutput').value)}`, '_blank');
       });
 
       $('btnPrintReport').addEventListener('click', () => {
         window.print();
       });
 
-      // ==========================================
-      // HISTORIAL EN LOCALSTORAGE
-      // ==========================================
       const STORAGE_KEY = 'frioasist_edx_history_v1';
 
       function loadHistory() {
@@ -1032,12 +949,12 @@
         try {
           localStorage.setItem(STORAGE_KEY, JSON.stringify(state.history));
         } catch {
-          showToast('No se pudo guardar en almacenamiento local');
+          showToast('Error al guardar historial');
         }
       }
 
       $('btnSaveHistory').addEventListener('click', () => {
-        const entry = {
+        state.history.unshift({
           id: Date.now(),
           date: new Date().toLocaleString('es-CL', {
             day: '2-digit',
@@ -1049,15 +966,10 @@
           local: $('inputLocal').value.trim() || 'Local sin nombre',
           equipo: $('inputEquipo').value.trim() || 'Equipo refrigerado',
           status: $('selectReportStatus').value,
-          gas: state.gas,
-          psi: state.psi,
-          amp: state.amp,
-          format: state.reportFormat,
           text: $('reportOutput').value
-        };
-        state.history.unshift(entry);
+        });
         persistHistory();
-        showToast('Informe guardado en el historial');
+        showToast('Guardado en historial');
       });
 
       function renderHistory() {
@@ -1076,38 +988,38 @@
 
         if (filtered.length === 0) {
           container.innerHTML = `
-            <div class="p-6 text-center rounded-xl bg-obsidian border border-borderDark text-xs text-slate-400">
-              No hay informes guardados con ese filtro. Genera un informe en la pestaña <strong>Informe</strong> y presiona <strong>Guardar Historial</strong>.
+            <div class="p-6 text-center rounded-xl bg-obsidian border border-line text-xs text-slate-400">
+              Sin reportes guardados para este filtro.
             </div>
           `;
           return;
         }
 
         const badgeMap = {
-          OPERATIVO: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300">🟢 Operativo</span>',
-          OBSERVACION: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300">🟡 Observación</span>',
-          REPUESTO: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-orange-500/20 text-orange-300">🟠 Repuesto</span>',
-          CRITICO: '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300">🔴 Crítico</span>'
+          OPERATIVO: '<span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">OPERATIVO</span>',
+          OBSERVACION: '<span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/15 text-amber-300 border border-amber-500/30">OBSERVACIÓN</span>',
+          REPUESTO: '<span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-orange-500/15 text-orange-300 border border-orange-500/30">REPUESTO</span>',
+          CRITICO: '<span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-rose-500/15 text-rose-300 border border-rose-500/30">CRÍTICO</span>'
         };
 
         container.innerHTML = filtered
           .map(
             (item) => `
-          <div class="p-3 rounded-xl bg-obsidian border border-borderDark space-y-2">
+          <div class="p-3 rounded-xl bg-obsidian border border-line space-y-2">
             <div class="flex items-start justify-between gap-2">
               <div>
-                <div class="text-xs font-bold text-white">${item.local}</div>
-                <div class="text-[11px] text-slate-400">${item.equipo} · ${item.date}</div>
+                <div class="text-xs font-semibold text-white">${item.local}</div>
+                <div class="text-[11px] font-mono text-slate-400">${item.equipo} · ${item.date}</div>
               </div>
               ${badgeMap[item.status] || ''}
             </div>
-            <div class="text-[11px] text-slate-300 line-clamp-2 whitespace-pre-line bg-card/60 p-2 rounded-lg border border-borderDark/60">${item.text}</div>
+            <div class="text-[11px] text-slate-300 line-clamp-2 whitespace-pre-line bg-panel/60 p-2 rounded-lg border border-line/60 font-mono">${item.text}</div>
             <div class="flex items-center justify-end gap-2 pt-1">
-              <button type="button" data-load-id="${item.id}" class="btn-load-history px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-300 border border-sky-500/40 text-[11px] font-bold">
-                Abrir en Informe
+              <button type="button" data-load-id="${item.id}" class="btn-load-history px-2.5 py-1 rounded-lg bg-ice/15 text-ice border border-ice/40 text-[11px] font-semibold">
+                Cargar en Informe
               </button>
-              <button type="button" data-del-id="${item.id}" class="btn-del-history px-2.5 py-1 rounded-lg bg-card text-rose-400 border border-borderDark text-[11px]">
-                Borrar
+              <button type="button" data-del-id="${item.id}" class="btn-del-history px-2.5 py-1 rounded-lg bg-panel text-rose-400 border border-line text-[11px]">
+                Eliminar
               </button>
             </div>
           </div>
@@ -1123,10 +1035,9 @@
             $('inputLocal').value = found.local;
             $('inputEquipo').value = found.equipo;
             $('selectReportStatus').value = found.status;
-            $('reportOutput').value = found.text;
             document.querySelector('[data-tab="informe"]').click();
             $('reportOutput').value = found.text;
-            showToast('Informe cargado desde el historial');
+            showToast('Reporte cargado');
           });
         });
 
@@ -1145,15 +1056,12 @@
       $('selectHistoryFilter').addEventListener('change', renderHistory);
 
       $('btnExportHistory').addEventListener('click', () => {
-        if (state.history.length === 0) {
-          showToast('No hay registros para exportar');
-          return;
-        }
+        if (state.history.length === 0) { showToast('Historial vacío'); return; }
         const blob = new Blob([JSON.stringify(state.history, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `historial_frioasist_edx_${new Date().toISOString().slice(0, 10)}.json`;
+        a.download = `frioasist_edx_historial_${new Date().toISOString().slice(0, 10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
       });
@@ -1163,49 +1071,14 @@
         state.history = [];
         persistHistory();
         renderHistory();
-        showToast('Historial vaciado');
+        showToast('Historial borrado');
       });
 
-      // ==========================================
-      // MODAL ESCÁNER Y PERFILES RÁPIDOS
-      // ==========================================
       const PROFILES = {
-        ventus_curva: {
-          equipo: 'Vitrina Vidrio Curvo Ventus FER-1500',
-          gas: 'R134a',
-          app: 'media',
-          grams: '135g',
-          rla: 2.1,
-          psi: 19,
-          amp: 1.9
-        },
-        ventus_r290: {
-          equipo: 'Visicooler Inverter Ventus VC-1000 R290',
-          gas: 'R290',
-          app: 'media',
-          grams: '95g',
-          rla: 1.6,
-          psi: 44,
-          amp: 1.4
-        },
-        hussmann_mural: {
-          equipo: 'Mural Lácteos Hussmann Autoservicio',
-          gas: 'R404A',
-          app: 'media',
-          grams: '850g',
-          rla: 5.8,
-          psi: 58,
-          amp: 5.2
-        },
-        isla_congelados: {
-          equipo: 'Isla Congelados Comercial (-20°C)',
-          gas: 'R404A',
-          app: 'baja',
-          grams: '620g',
-          rla: 4.6,
-          psi: 22,
-          amp: 4.1
-        }
+        ventus_curva: { equipo: 'Vitrina Vidrio Curvo Ventus FER-1500', gas: 'R134a', app: 'media', grams: '135g', rla: 2.1, psi: 19, amp: 1.9 },
+        ventus_r290: { equipo: 'Visicooler Inverter Ventus VC-1000 R290', gas: 'R290', app: 'media', grams: '95g', rla: 1.6, psi: 44, amp: 1.4 },
+        hussmann_mural: { equipo: 'Mural Hussmann Refrigeración', gas: 'R404A', app: 'media', grams: '850g', rla: 5.8, psi: 58, amp: 5.2 },
+        isla_congelados: { equipo: 'Isla Congelados (-20 °C)', gas: 'R404A', app: 'baja', grams: '620g', rla: 4.6, psi: 22, amp: 4.1 }
       };
 
       function applyProfile(p) {
@@ -1219,29 +1092,27 @@
         state.amp = p.amp;
 
         document.querySelectorAll('.gas-btn').forEach((b) => {
-          b.className =
-            b.dataset.gas === state.gas
-              ? 'gas-btn py-2 rounded-xl text-xs font-bold bg-sky-500 text-slate-950'
-              : 'gas-btn py-2 rounded-xl text-xs font-semibold bg-obsidian text-slate-300 border border-borderDark';
+          b.className = b.dataset.gas === state.gas
+            ? 'gas-btn py-2 rounded-lg text-xs font-mono font-bold bg-ice text-slate-950 border border-ice'
+            : 'gas-btn py-2 rounded-lg text-xs font-mono font-medium bg-obsidian text-slate-300 border border-line';
         });
         $('r290Alert').classList.toggle('hidden', state.gas !== 'R290');
 
         if (state.app === 'media') {
-          $('btnAppMedia').className = 'py-2.5 px-3 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/50';
-          $('btnAppBaja').className = 'py-2.5 px-3 rounded-xl text-xs font-semibold bg-obsidian text-slate-400 border border-borderDark';
+          $('btnAppMedia').className = 'py-2 px-3 rounded-lg text-xs font-semibold bg-ice/15 text-ice border border-ice/40';
+          $('btnAppBaja').className = 'py-2 px-3 rounded-lg text-xs font-medium bg-obsidian text-slate-400 border border-line';
         } else {
-          $('btnAppBaja').className = 'py-2.5 px-3 rounded-xl text-xs font-bold bg-sky-500/20 text-sky-300 border border-sky-500/50';
-          $('btnAppMedia').className = 'py-2.5 px-3 rounded-xl text-xs font-semibold bg-obsidian text-slate-400 border border-borderDark';
+          $('btnAppBaja').className = 'py-2 px-3 rounded-lg text-xs font-semibold bg-ice/15 text-ice border border-ice/40';
+          $('btnAppMedia').className = 'py-2 px-3 rounded-lg text-xs font-medium bg-obsidian text-slate-400 border border-line';
         }
 
         $('scannerModal').classList.add('hidden');
         updateCalculationUI();
-        showToast(`Perfil cargado: ${p.equipo}`);
+        showToast(`Perfil aplicado: ${p.equipo}`);
       }
 
       $('btnOpenScanner').addEventListener('click', () => {
-        const savedKey = localStorage.getItem('frioasist_gemini_key') || '';
-        $('inputGeminiKey').value = savedKey;
+        $('inputGeminiKey').value = localStorage.getItem('frioasist_gemini_key') || '';
         $('scannerModal').classList.remove('hidden');
       });
 
@@ -1258,7 +1129,7 @@
 
       $('btnSaveApiKey').addEventListener('click', () => {
         localStorage.setItem('frioasist_gemini_key', $('inputGeminiKey').value.trim());
-        showToast('API Key guardada en este navegador');
+        showToast('API Key guardada');
       });
 
       let currentPhotoBase64 = '';
@@ -1270,10 +1141,9 @@
         currentPhotoMime = file.type || 'image/jpeg';
         const reader = new FileReader();
         reader.onload = () => {
-          const result = reader.result;
-          $('photoPreviewImg').src = result;
+          $('photoPreviewImg').src = reader.result;
           $('photoPreviewWrap').classList.remove('hidden');
-          currentPhotoBase64 = result.split(',')[1] || '';
+          currentPhotoBase64 = (reader.result || '').split(',')[1] || '';
         };
         reader.readAsDataURL(file);
       });
@@ -1282,17 +1152,17 @@
         const apiKey = (localStorage.getItem('frioasist_gemini_key') || $('inputGeminiKey').value || '').trim();
         if (!apiKey || !currentPhotoBase64) {
           applyProfile(PROFILES.ventus_curva);
-          showToast('Sin API Key: se aplicó perfil base Ventus para editar');
+          showToast('Sin API Key: perfil base aplicado');
           return;
         }
 
         const btn = $('btnAnalyzePhoto');
         btn.disabled = true;
-        btn.textContent = '⏳ Analizando placa con Gemini Vision...';
+        btn.textContent = 'Analizando imagen...';
 
         try {
           const prompt =
-            'Analiza esta imagen de una placa técnica, compresor o vitrina refrigerada. Devuelve SOLO un JSON válido sin markdown con las claves: {"equipo":"marca y modelo","gas":"R134a|R404A|R290|R22","app":"media|baja","grams":"ej 135g","rla":2.1}';
+            'Analiza esta placa tecnica de refrigeracion y devuelve SOLO JSON valido: {"equipo":"marca y modelo","gas":"R134a|R404A|R290|R22","app":"media|baja","grams":"ej 135g","rla":2.1}';
 
           const resp = await fetch(
             `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(apiKey)}`,
@@ -1314,8 +1184,7 @@
 
           const data = await resp.json();
           const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-          const cleaned = rawText.replace(/```json|```/g, '').trim();
-          const parsed = JSON.parse(cleaned);
+          const parsed = JSON.parse(rawText.replace(/```json|```/g, '').trim());
 
           applyProfile({
             equipo: parsed.equipo || 'Equipo Detectado IA',
@@ -1326,18 +1195,15 @@
             psi: state.psi,
             amp: state.amp
           });
-          showToast('Placa leída y aplicada con IA');
-        } catch (err) {
-          showToast('No se pudo leer la foto; revisa tu API Key o usa un perfil');
+          showToast('Lectura de placa completada');
+        } catch {
+          showToast('Error al analizar imagen con API Key');
         } finally {
           btn.disabled = false;
-          btn.textContent = '✨ Analizar Foto y Autorrellenar Campos';
+          btn.textContent = 'Analizar Imagen y Completar Campos';
         }
       });
 
-      // ==========================================
-      // INICIALIZACIÓN
-      // ==========================================
       loadHistory();
       renderFaults();
       renderCodes();
